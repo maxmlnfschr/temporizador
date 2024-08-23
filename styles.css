@@ -31,8 +31,6 @@ body {
 
 .timer-box {
     width: 100%;
-    border: 2px solid #D94A4A;
-    border-radius: 10px;
     padding: 20px;
     background-color: rgba(0, 0, 0, 0.1);
     display: flex;
@@ -43,7 +41,7 @@ body {
 }
 
 h1 {
-    font-size: 2,5em;
+    font-size: 2.5em;
     margin: 0 0 20px 0;
 }
 
