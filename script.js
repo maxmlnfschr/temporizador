@@ -31,7 +31,7 @@ function updateDisplay() {
         messageDisplay.textContent = 'Preparate para la siguiente serie';
     } else {
         timerDisplay.style.color = '#FFFFFF';
-        messageDisplay.textContent = 'Descansa...';
+        messageDisplay.textContent = 'Descansa';
     }
 }
 
@@ -96,7 +96,7 @@ function cancelTimer() {
 
 function resetColors() {
     timerDisplay.style.color = '#FFFFFF';
-    messageDisplay.textContent = 'Descansa...';
+    messageDisplay.textContent = 'Descansa';
 }
 
 function repeatLastTimer() {
