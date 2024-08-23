@@ -3,28 +3,34 @@
     touch-action: manipulation;
 }
 
+html, body {
+    height: 100%;
+    margin: 0;
+    padding: 0;
+    overflow: hidden;
+}
+
 body {
     font-family: Arial, sans-serif;
     display: flex;
     justify-content: center;
     align-items: center;
-    min-height: 100vh;
-    margin: 0;
     background-color: #262626;
-    padding: 20px;
+    color: #FFFFFF;
 }
 
 .container {
     width: 100%;
     max-width: 500px;
+    padding: 20px;
     display: flex;
     flex-direction: column;
     justify-content: center;
     align-items: center;
-    height: 100vh;
 }
 
 .timer-box {
+    width: 100%;
     border: 2px solid #D94A4A;
     border-radius: 10px;
     padding: 20px;
@@ -37,22 +43,19 @@ body {
 }
 
 h1 {
-    color: #FFFFFF;
-    font-size: 1.5em;
+    font-size: 2,5em;
     margin: 0 0 20px 0;
 }
 
 #timer {
-    font-size: 4em;
+    font-size: 6em;
     margin: 20px 0;
-    color: #FFFFFF;
 }
 
 .controls {
     display: flex;
     flex-direction: column;
     align-items: center;
-    margin-top: 20px;
     width: 100%;
 }
 
@@ -110,6 +113,14 @@ button:disabled {
 }
 
 @media (max-width: 400px) {
+    .container {
+        padding: 10px;
+    }
+
+    .timer-box {
+        padding: 15px;
+    }
+
     #timer {
         font-size: 3em;
     }
@@ -117,5 +128,34 @@ button:disabled {
     button {
         font-size: 0.9em;
         padding: 8px 12px;
+    }
+
+    h1 {
+        font-size: 1.2em;
+    }
+}
+
+@media (max-height: 600px) {
+    .container {
+        padding: 10px;
+    }
+
+    .timer-box {
+        padding: 10px;
+    }
+
+    #timer {
+        font-size: 3em;
+        margin: 10px 0;
+    }
+
+    button {
+        padding: 8px 10px;
+        font-size: 0.8em;
+    }
+
+    h1 {
+        font-size: 1.2em;
+        margin-bottom: 10px;
     }
 }
