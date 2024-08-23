@@ -28,13 +28,7 @@ function updateDisplay() {
         timerDisplay.textContent = `${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
     }
     
-    if (isRunning && timeLeft <= 20) {
-        timerDisplay.style.color = '#D94A4A';
-        messageDisplay.textContent = 'Preparate para la siguiente serie';
-    } else {
-        timerDisplay.style.color = '#FFFFFF';
-        messageDisplay.textContent = 'Descansa';
-    }
+    messageDisplay.textContent = 'Descansa';
 }
 
 function startPauseResumeTimer() {
@@ -59,6 +53,7 @@ function startPauseResumeTimer() {
         actionButton.textContent = 'Pausar';
     }
     updateDisplay();
+    saveState();
 }
 
 function startTimer() {
@@ -66,6 +61,7 @@ function startTimer() {
         if (timeLeft > 0) {
             timeLeft--;
             updateDisplay();
+            saveState();
         } else {
             finishTimer();
         }
@@ -81,8 +77,8 @@ function finishTimer() {
     cancelResetButton.textContent = 'Reiniciar';
     isCancelMode = false;
     alert('¡Tiempo terminado!');
-    resetColors();
     updateRepeatButton();
+    saveState();
 }
 
 function cancelTimer() {
@@ -95,13 +91,8 @@ function cancelTimer() {
     actionButton.disabled = true;
     cancelResetButton.textContent = 'Reiniciar';
     isCancelMode = false;
-    resetColors();
     updateRepeatButton();
-}
-
-function resetColors() {
-    timerDisplay.style.color = '#FFFFFF';
-    messageDisplay.textContent = 'Descansa';
+    saveState();
 }
 
 function repeatLastTimer() {
@@ -122,9 +113,8 @@ function addMinute() {
     timeLeft += 60;
     totalTime += 60;
     updateDisplay();
-    actionButton.disabled = false;
-    cancelResetButton.disabled = false;
-    updateRepeatButton();
+    updateButtonStates();
+    saveState();
 }
 
 function subMinute() {
@@ -136,17 +126,16 @@ function subMinute() {
         totalTime = 0;
     }
     updateDisplay();
-    checkTimerStatus();
-    updateRepeatButton();
+    updateButtonStates();
+    saveState();
 }
 
 function addSeconds() {
     timeLeft += 30;
     totalTime += 30;
     updateDisplay();
-    actionButton.disabled = false;
-    cancelResetButton.disabled = false;
-    updateRepeatButton();
+    updateButtonStates();
+    saveState();
 }
 
 function subSeconds() {
@@ -158,20 +147,22 @@ function subSeconds() {
         totalTime = 0;
     }
     updateDisplay();
-    checkTimerStatus();
-    updateRepeatButton();
+    updateButtonStates();
+    saveState();
 }
 
-function checkTimerStatus() {
-    if (timeLeft === 0) {
-        if (isRunning) {
-            finishTimer();
-        } else {
-            actionButton.disabled = true;
-            cancelResetButton.textContent = 'Reiniciar';
-            isCancelMode = false;
-        }
+function updateButtonStates() {
+    actionButton.disabled = timeLeft === 0;
+    if (timeLeft > 0) {
+        cancelResetButton.textContent = 'Cancelar';
+        cancelResetButton.disabled = false;
+        isCancelMode = true;
+    } else {
+        cancelResetButton.textContent = 'Reiniciar';
+        cancelResetButton.disabled = true;
+        isCancelMode = false;
     }
+    updateRepeatButton();
 }
 
 function updateRepeatButton() {
@@ -194,7 +185,37 @@ function updateRepeatButton() {
     } else {
         repeatButton.textContent = 'Repetir último';
     }
-    cancelResetButton.disabled = totalTime === 0 && isCancelMode;
+}
+
+function saveState() {
+    localStorage.setItem('timerState', JSON.stringify({
+        timeLeft,
+        totalTime,
+        isRunning,
+        isPaused,
+        hasStartedOnce,
+        isCancelMode,
+        lastSaved: Date.now()
+    }));
+}
+
+function loadState() {
+    const savedState = JSON.parse(localStorage.getItem('timerState'));
+    if (savedState) {
+        const timePassed = Math.floor((Date.now() - savedState.lastSaved) / 1000);
+        timeLeft = Math.max(0, savedState.timeLeft - (savedState.isRunning ? timePassed : 0));
+        totalTime = savedState.totalTime;
+        isRunning = savedState.isRunning;
+        isPaused = savedState.isPaused;
+        hasStartedOnce = savedState.hasStartedOnce;
+        isCancelMode = savedState.isCancelMode;
+
+        updateDisplay();
+        updateButtonStates();
+        if (isRunning) {
+            startTimer();
+        }
+    }
 }
 
 actionButton.addEventListener('click', startPauseResumeTimer);
@@ -205,9 +226,8 @@ cancelResetButton.addEventListener('click', function() {
         timeLeft = 0;
         totalTime = 0;
         updateDisplay();
-        cancelResetButton.textContent = 'Cancelar';
-        isCancelMode = true;
-        updateRepeatButton();
+        updateButtonStates();
+        saveState();
     }
 });
 repeatButton.addEventListener('click', repeatLastTimer);
@@ -216,8 +236,8 @@ subMinuteButton.addEventListener('click', subMinute);
 addSecondsButton.addEventListener('click', addSeconds);
 subSecondsButton.addEventListener('click', subSeconds);
 
-updateDisplay();
-actionButton.disabled = true;
-cancelResetButton.disabled = true;
-repeatButton.disabled = true;
-updateRepeatButton();
+loadState();
+if (!isRunning && !isPaused) {
+    updateButtonStates();
+    repeatButton.disabled = totalTime === 0;
+}
