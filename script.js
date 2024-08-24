@@ -120,7 +120,7 @@ button:disabled {
         padding: 10px;
     }
 
-    #timer {4.7em;
+    #timer {4.4em;
     }
 
     button {
@@ -129,6 +129,6 @@ button:disabled {
     }
 
     h1 {
-        font-size: 2em;
+        font-size: 3em;
     }
 }
