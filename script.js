@@ -2,6 +2,7 @@ let timer;
 let timeLeft = 0;
 let lastTime = 0;
 let totalTime = 0;
+let lastAddedTime = 0;
 let isRunning = false;
 let isPaused = false;
 let hasStartedOnce = false;
@@ -63,6 +64,7 @@ function startPauseResumeTimer() {
         actionButton.textContent = 'Pausar';
     }
     updateDisplay();
+    updateButtonStates();
     saveState();
 }
 
@@ -84,10 +86,9 @@ function finishTimer() {
     isPaused = false;
     actionButton.textContent = 'Iniciar';
     actionButton.disabled = true;
-    cancelResetButton.textContent = 'Reiniciar';
-    isCancelMode = false;
     timerDisplay.style.color = '#FFFFFF';
     alert('¡Tiempo terminado!');
+    updateButtonStates();
     updateRepeatButton();
     saveState();
 }
@@ -102,29 +103,31 @@ function cancelTimer() {
     actionButton.disabled = true;
     cancelResetButton.textContent = 'Reiniciar';
     isCancelMode = false;
-    updateRepeatButton();
+    updateButtonStates();
     saveState();
 }
 
 function repeatLastTimer() {
-    clearInterval(timer);
-    isRunning = false;
-    isPaused = false;
-    if (totalTime > 0) {
-        timeLeft = totalTime;
+    if (lastAddedTime > 0) {
+        clearInterval(timer);
+        isRunning = true;
+        isPaused = false;
+        timeLeft = lastAddedTime;
         updateDisplay();
         actionButton.textContent = 'Pausar';
         actionButton.disabled = false;
-        cancelResetButton.disabled = false;
-        startPauseResumeTimer();
+        updateButtonStates();
+        startTimer();
+        saveState();
     }
 }
 
 function addTime(seconds) {
     timeLeft += seconds;
-    totalTime = timeLeft;
+    lastAddedTime += seconds;
     updateDisplay();
     updateButtonStates();
+    updateRepeatButton();
     saveState();
 }
 
@@ -134,20 +137,27 @@ function updateButtonStates() {
         cancelResetButton.textContent = 'Cancelar';
         cancelResetButton.disabled = false;
         isCancelMode = true;
+    } else if (lastAddedTime > 0) {
+        cancelResetButton.textContent = 'Reiniciar';
+        cancelResetButton.disabled = false;
+        isCancelMode = false;
     } else {
         cancelResetButton.textContent = 'Cancelar';
         cancelResetButton.disabled = true;
-        isCancelMode = false;
+        isCancelMode = true;
     }
-    updateRepeatButton();
+    updateRepeatButtonState();
+}
+
+function updateRepeatButtonState() {
+    repeatButton.disabled = lastAddedTime === 0;
 }
 
 function updateRepeatButton() {
-    repeatButton.disabled = totalTime === 0;
-    if (totalTime > 0) {
-        let hours = Math.floor(totalTime / 3600);
-        let minutes = Math.floor((totalTime % 3600) / 60);
-        let seconds = totalTime % 60;
+    if (lastAddedTime > 0) {
+        let hours = Math.floor(lastAddedTime / 3600);
+        let minutes = Math.floor((lastAddedTime % 3600) / 60);
+        let seconds = lastAddedTime % 60;
         if (hours > 0) {
             repeatButton.textContent = `Repetir ${hours.toString().padStart(2, '0')}:${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
         } else {
@@ -162,6 +172,7 @@ function saveState() {
     localStorage.setItem('timerState', JSON.stringify({
         timeLeft,
         totalTime,
+        lastAddedTime,
         isRunning,
         isPaused,
         hasStartedOnce,
@@ -176,6 +187,7 @@ function loadState() {
         const timePassed = Math.floor((Date.now() - savedState.lastSaved) / 1000);
         timeLeft = Math.max(0, savedState.timeLeft - (savedState.isRunning ? timePassed : 0));
         totalTime = savedState.totalTime;
+        lastAddedTime = savedState.lastAddedTime || 0;
         isRunning = savedState.isRunning;
         isPaused = savedState.isPaused;
         hasStartedOnce = savedState.hasStartedOnce;
@@ -183,6 +195,7 @@ function loadState() {
 
         updateDisplay();
         updateButtonStates();
+        updateRepeatButton();
         if (isRunning) {
             startTimer();
         }
@@ -196,8 +209,10 @@ cancelResetButton.addEventListener('click', function() {
     } else {
         timeLeft = 0;
         totalTime = 0;
+        lastAddedTime = 0;
         updateDisplay();
         updateButtonStates();
+        updateRepeatButton();
         saveState();
     }
 });
@@ -209,5 +224,5 @@ add5MinutesButton.addEventListener('click', () => addTime(300));
 loadState();
 if (!isRunning && !isPaused) {
     updateButtonStates();
-    repeatButton.disabled = totalTime === 0;
+    updateRepeatButton();
 }
