@@ -1,2 +1,2 @@
-# temporizador
+# Temporizador
 Un simple temporizador.
