@@ -41,13 +41,38 @@ body {
 }
 
 h1 {
-    font-size: 2.5em;
+    font-size: 1.5em;
     margin: 0 0 20px 0;
 }
 
-#timer {
-    font-size: 6em;
+.timer-circle {
+    width: 200px;
+    height: 200px;
+    border-radius: 50%;
+    background-color: #353535;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    position: relative;
     margin: 20px 0;
+}
+
+.timer-circle::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    border-radius: 50%;
+    background: conic-gradient(var(--progress-color, #4A90E2) var(--progress, 0deg), transparent 0deg);
+    mask: radial-gradient(transparent 55%, black 56%);
+    -webkit-mask: radial-gradient(transparent 55%, black 56%);
+}
+
+#timer {
+    font-size: 3em;
+    z-index: 1;
 }
 
 .controls {
@@ -75,7 +100,7 @@ button {
     transition: background-color 0.3s ease;
     color: #FFFFFF;
     flex-grow: 1;
-    max-width: calc(50% - 10px);
+    max-width: calc(33.33% - 10px);
 }
 
 .time-controls button {
@@ -83,9 +108,7 @@ button {
 }
 
 .timer-controls button,
-.repeat-control button,
-#subMinute,
-#addMinute {
+.repeat-control button {
     background-color: #353535;
 }
 
