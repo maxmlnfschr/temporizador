@@ -15,14 +15,14 @@ body {
     display: flex;
     justify-content: center;
     align-items: center;
-    background-color: #262626;
+    background-color: #0D0D0D;
     color: #FFFFFF;
 }
 
 .container {
     width: 100%;
-    max-width: 500px;
-    padding: 20px;
+    max-width: 350px;
+    padding: 10px;
     display: flex;
     flex-direction: column;
     justify-content: center;
@@ -31,8 +31,8 @@ body {
 
 .timer-box {
     width: 100%;
-    padding: 20px;
-    background-color: rgba(0, 0, 0, 0.1);
+    padding: 15px;
+    background-color: #0D0D0D;
     display: flex;
     flex-direction: column;
     justify-content: center;
@@ -41,38 +41,13 @@ body {
 }
 
 h1 {
-    font-size: 1.5em;
-    margin: 0 0 20px 0;
-}
-
-.timer-circle {
-    width: 200px;
-    height: 200px;
-    border-radius: 50%;
-    background-color: #353535;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    position: relative;
-    margin: 20px 0;
-}
-
-.timer-circle::before {
-    content: '';
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    border-radius: 50%;
-    background: conic-gradient(var(--progress-color, #4A90E2) var(--progress, 0deg), transparent 0deg);
-    mask: radial-gradient(transparent 55%, black 56%);
-    -webkit-mask: radial-gradient(transparent 55%, black 56%);
+    font-size: 2em;
+    margin: 0 0 0px 0;
 }
 
 #timer {
-    font-size: 3em;
-    z-index: 1;
+    font-size: 4.7em;
+    margin: 10px 0;
 }
 
 .controls {
@@ -82,83 +57,59 @@ h1 {
     width: 100%;
 }
 
-.time-controls, .timer-controls, .repeat-control {
+.time-controls, .timer-controls {
     display: flex;
     justify-content: center;
     flex-wrap: wrap;
-    margin-bottom: 10px;
+    margin-bottom: 5px;
     width: 100%;
 }
 
 button {
-    margin: 5px;
-    padding: 10px 15px;
-    font-size: 1em;
+    margin: 3px;
+    padding: 8px 12px;
+    font-size: 0.9em;
     cursor: pointer;
     border: none;
-    border-radius: 5px;
+    border-radius: 8px;
     transition: background-color 0.3s ease;
     color: #FFFFFF;
-    flex-grow: 1;
-    max-width: calc(33.33% - 10px);
 }
 
 .time-controls button {
+    background-color: #1A1A1A;
+    flex: 1;
+}
+
+.timer-controls button {
     background-color: #262626;
 }
 
-.timer-controls button,
-.repeat-control button {
-    background-color: #353535;
+.timer-controls #cancel,
+.timer-controls #start {
+    flex: 1;
+    max-width: 30%;
+}
+
+.timer-controls #repeat {
+    flex: 2;
+    max-width: 40%;
 }
 
 button:hover:not(:disabled) {
-    background-color: #454545;
+    background-color: #333333;
 }
 
 button:disabled {
-    background-color: #1a1a1a;
+    background-color: #1A1A1A;
     color: #666666;
     cursor: not-allowed;
     opacity: 0.7;
 }
 
-#start, #cancel {
-    width: calc(50% - 10px);
-    max-width: none;
-}
-
-#repeat {
-    width: auto;
-    max-width: 70%;
-}
-
 @media (max-width: 400px) {
     .container {
-        padding: 10px;
-    }
-
-    .timer-box {
-        padding: 15px;
-    }
-
-    #timer {
-        font-size: 3em;
-    }
-
-    button {
-        font-size: 0.9em;
-        padding: 8px 12px;
-    }
-
-    h1 {
-        font-size: 1.2em;
-    }
-}
-
-@media (max-height: 600px) {
-    .container {
-        padding: 10px;
+        padding: 5px;
     }
 
     .timer-box {
@@ -166,17 +117,15 @@ button:disabled {
     }
 
     #timer {
-        font-size: 3em;
-        margin: 10px 0;
+        font-size: 3.5em;
     }
 
     button {
-        padding: 8px 10px;
         font-size: 0.8em;
+        padding: 7px 10px;
     }
 
     h1 {
-        font-size: 1.2em;
-        margin-bottom: 10px;
+        font-size: 1em;
     }
 }
