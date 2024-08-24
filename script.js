@@ -135,7 +135,7 @@ function updateButtonStates() {
         cancelResetButton.disabled = false;
         isCancelMode = true;
     } else {
-        cancelResetButton.textContent = 'Reiniciar';
+        cancelResetButton.textContent = 'Cancelar';
         cancelResetButton.disabled = true;
         isCancelMode = false;
     }
