@@ -41,12 +41,12 @@ body {
 }
 
 h1 {
-    font-size: 2em;
+    font-size: 3em;
     margin: 0 0 0px 0;
 }
 
 #timer {
-    font-size: 4.7em;
+    font-size: 4.4em;
     margin: 10px 0;
 }
 
@@ -83,6 +83,10 @@ button {
 
 .timer-controls button {
     background-color: #262626;
+    height: 42px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
 }
 
 .timer-controls #cancel,
