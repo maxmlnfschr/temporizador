@@ -17,27 +17,25 @@ const add1MinuteButton = document.getElementById('add1Minute');
 const add5MinutesButton = document.getElementById('add5Minutes');
 
 function updateDisplay() {
-    let minutes = Math.floor(timeLeft / 60);
+    let hours = Math.floor(timeLeft / 3600);
+    let minutes = Math.floor((timeLeft % 3600) / 60);
     let seconds = timeLeft % 60;
 
-    timerDisplay.textContent = `${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
+    if (hours > 0) {
+        timerDisplay.textContent = `${hours.toString().padStart(2, '0')}:${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
+    } else {
+        timerDisplay.textContent = `${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
+    }
     
     if (isRunning) {
-        const progress = ((totalTime - timeLeft) / totalTime) * 360;
-        const progressColor = timeLeft <= 10 ? '#D94A4A' : '#4A90E2';
-        document.querySelector('.timer-circle').style.setProperty('--progress', `${progress}deg`);
-        document.querySelector('.timer-circle').style.setProperty('--progress-color', progressColor);
-        
         if (timeLeft <= 10) {
             timerDisplay.style.color = '#D94A4A';
-            messageDisplay.textContent = 'El descanso terminó... Prepárate';
+            messageDisplay.textContent = 'Preparate';
         } else {
             timerDisplay.style.color = '#FFFFFF';
             messageDisplay.textContent = 'Descansa';
         }
     } else {
-        document.querySelector('.timer-circle').style.setProperty('--progress', '0deg');
-        document.querySelector('.timer-circle').style.setProperty('--progress-color', '#4A90E2');
         timerDisplay.style.color = '#FFFFFF';
         messageDisplay.textContent = 'Descansa';
     }
@@ -88,9 +86,7 @@ function finishTimer() {
     actionButton.disabled = true;
     cancelResetButton.textContent = 'Reiniciar';
     isCancelMode = false;
-    document.querySelector('.timer-circle').style.setProperty('--progress', '360deg');
-    document.querySelector('.timer-circle').style.setProperty('--progress-color', '#D94A4A');
-    timerDisplay.style.color = '#D94A4A';
+    timerDisplay.style.color = '#FFFFFF';
     alert('¡Tiempo terminado!');
     updateRepeatButton();
     saveState();
@@ -149,9 +145,14 @@ function updateButtonStates() {
 function updateRepeatButton() {
     repeatButton.disabled = totalTime === 0;
     if (totalTime > 0) {
-        let minutes = Math.floor(totalTime / 60);
+        let hours = Math.floor(totalTime / 3600);
+        let minutes = Math.floor((totalTime % 3600) / 60);
         let seconds = totalTime % 60;
-        repeatButton.textContent = `Repetir ${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
+        if (hours > 0) {
+            repeatButton.textContent = `Repetir ${hours.toString().padStart(2, '0')}:${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
+        } else {
+            repeatButton.textContent = `Repetir ${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
+        }
     } else {
         repeatButton.textContent = 'Repetir último';
     }
