@@ -7,6 +7,7 @@ let isRunning = false;
 let isPaused = false;
 let hasStartedOnce = false;
 let isCancelMode = true;
+const MAX_TIME = 480; // 8 minutes in seconds
 
 const timerDisplay = document.getElementById('timer');
 const messageDisplay = document.getElementById('message');
@@ -15,18 +16,11 @@ const cancelResetButton = document.getElementById('cancel');
 const repeatButton = document.getElementById('repeat');
 const add30SecondsButton = document.getElementById('add30Seconds');
 const add1MinuteButton = document.getElementById('add1Minute');
-const add5MinutesButton = document.getElementById('add5Minutes');
 
 function updateDisplay() {
-    let hours = Math.floor(timeLeft / 3600);
-    let minutes = Math.floor((timeLeft % 3600) / 60);
+    let minutes = Math.floor(timeLeft / 60);
     let seconds = timeLeft % 60;
-
-    if (hours > 0) {
-        timerDisplay.textContent = `${hours.toString().padStart(2, '0')}:${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
-    } else {
-        timerDisplay.textContent = `${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
-    }
+    timerDisplay.textContent = `${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
     
     if (isRunning) {
         if (timeLeft <= 10) {
@@ -112,7 +106,7 @@ function repeatLastTimer() {
         clearInterval(timer);
         isRunning = true;
         isPaused = false;
-        timeLeft = lastAddedTime;
+        timeLeft = Math.min(lastAddedTime, MAX_TIME);
         updateDisplay();
         actionButton.textContent = 'Pausar';
         actionButton.disabled = false;
@@ -123,8 +117,14 @@ function repeatLastTimer() {
 }
 
 function addTime(seconds) {
-    timeLeft += seconds;
-    lastAddedTime += seconds;
+    let newTime = timeLeft + seconds;
+    if (newTime <= MAX_TIME) {
+        timeLeft = newTime;
+        lastAddedTime = newTime;
+    } else {
+        timeLeft = MAX_TIME;
+        lastAddedTime = MAX_TIME;
+    }
     updateDisplay();
     updateButtonStates();
     updateRepeatButton();
@@ -147,6 +147,8 @@ function updateButtonStates() {
         isCancelMode = true;
     }
     updateRepeatButtonState();
+    add30SecondsButton.disabled = timeLeft >= MAX_TIME;
+    add1MinuteButton.disabled = timeLeft >= MAX_TIME - 30;
 }
 
 function updateRepeatButtonState() {
@@ -155,14 +157,9 @@ function updateRepeatButtonState() {
 
 function updateRepeatButton() {
     if (lastAddedTime > 0) {
-        let hours = Math.floor(lastAddedTime / 3600);
-        let minutes = Math.floor((lastAddedTime % 3600) / 60);
+        let minutes = Math.floor(lastAddedTime / 60);
         let seconds = lastAddedTime % 60;
-        if (hours > 0) {
-            repeatButton.textContent = `Repetir ${hours.toString().padStart(2, '0')}:${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
-        } else {
-            repeatButton.textContent = `Repetir ${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
-        }
+        repeatButton.textContent = `Repetir ${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
     } else {
         repeatButton.textContent = 'Repetir último';
     }
@@ -219,7 +216,6 @@ cancelResetButton.addEventListener('click', function() {
 repeatButton.addEventListener('click', repeatLastTimer);
 add30SecondsButton.addEventListener('click', () => addTime(30));
 add1MinuteButton.addEventListener('click', () => addTime(60));
-add5MinutesButton.addEventListener('click', () => addTime(300));
 
 loadState();
 if (!isRunning && !isPaused) {
