@@ -7,7 +7,7 @@ let isRunning = false;
 let isPaused = false;
 let hasStartedOnce = false;
 let isCancelMode = true;
-const MAX_TIME = 480; // 8 minutes in seconds
+const MAX_TIME = 480;
 
 const timerDisplay = document.getElementById('timer');
 const messageDisplay = document.getElementById('message');
@@ -81,7 +81,6 @@ function finishTimer() {
     actionButton.textContent = 'Iniciar';
     actionButton.disabled = true;
     timerDisplay.style.color = '#FFFFFF';
-    alert('¡Tiempo terminado!');
     updateButtonStates();
     updateRepeatButton();
     saveState();
@@ -159,9 +158,9 @@ function updateRepeatButton() {
     if (lastAddedTime > 0) {
         let minutes = Math.floor(lastAddedTime / 60);
         let seconds = lastAddedTime % 60;
-        repeatButton.textContent = `Repetir ${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
+        repeatButton.textContent = `+${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
     } else {
-        repeatButton.textContent = 'Repetir último';
+        repeatButton.textContent = 'Repetir';
     }
 }
 
