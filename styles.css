@@ -25,7 +25,7 @@ body {
 
 .container {
     width: 100%;
-    max-width: 350px;
+    max-width: 300px;
     padding: 10px;
     display: flex;
     flex-direction: column;
@@ -63,14 +63,12 @@ h1 {
 
 .time-controls, .timer-controls {
     display: flex;
-    justify-content: center;
-    flex-wrap: wrap;
-    margin-bottom: 5px;
+    justify-content: space-between;
+    margin-bottom: 10px;
     width: 100%;
 }
 
 button {
-    margin: 3px;
     padding: 8px 12px;
     font-size: 0.9em;
     cursor: pointer;
@@ -78,30 +76,38 @@ button {
     border-radius: 8px;
     transition: background-color 0.3s ease;
     color: #FFFFFF;
-    display: flex;
+    background-color: #1A1A1A;
+    display: inline-flex;
     justify-content: center;
     align-items: center;
     white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
+    min-width: 60px;
 }
 
 .time-controls button {
-    background-color: #1A1A1A;
-    width: 70px;  /* Ajustado para ser más corto */
+    flex: 1;
+    margin: 0 5px;
+}
+
+.time-controls button:first-child {
+    margin-left: 0;
+}
+
+.time-controls button:last-child {
+    margin-right: 0;
 }
 
 .timer-controls button {
-    background-color: #262626;
+    flex: 1;
+    margin: 0 5px;
 }
 
-.timer-controls #cancel,
-.timer-controls #start {
-    width: 80px;  /* Ajustado para ser más corto */
+.timer-controls button:first-child {
+    margin-left: 0;
 }
 
-.timer-controls #repeat {
-    width: 120px;  /* Ajustado para ser un poco más largo */
+.timer-controls button:last-child {
+    margin-right: 0;
 }
 
 button:hover:not(:disabled) {
